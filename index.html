@@ -43,7 +43,12 @@
                 if (!doc || !doc.body) throw new Error('Nội dung ứng dụng chưa sẵn sàng.');
                 appStarted = true;
                 const script = doc.createElement('script');
-                script.src = 'pdf-tools.js?v=5.8.0';
+                // Tính absolute URL từ src ban đầu của iframe (trước khi Firebase redirect)
+                // để tránh lỗi khi cleanUrls+trailingSlash đổi base URL của iframe.
+                // Ví dụ: frame.src = 'app-v53.html?v=5.8.0' → base = current page URL
+                // → pdf-tools.js sẽ resolve đúng tại cùng thư mục với index.html.
+                const pageBase = new URL('.', document.baseURI).href;
+                script.src = pageBase + 'pdf-tools.js?v=5.8.0';
                 script.dataset.pdfTools = 'v5.8.0';
                 script.onload = () => loading?.remove();
                 script.onerror = () => showStartupError('Không tải được bộ công cụ V5.8. Vui lòng thử tải lại.');
