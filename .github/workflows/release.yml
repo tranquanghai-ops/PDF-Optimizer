@@ -1,0 +1,59 @@
+﻿name: Release App Artifact
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: "Release tag (e.g. v1.0.0)"
+        required: true
+        default: "v1.0.0"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Package and publish release artifact
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Determine release tag
+        id: vars
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="${{ github.event.inputs.tag_name }}"
+          else
+            TAG="${{ github.ref_name }}"
+          fi
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Building artifact for tag: $TAG"
+
+      - name: Package web application artifact
+        run: |
+          # Verify essential files exist
+          test -f index.html || { echo "ERROR: index.html missing"; exit 1; }
+          test -f app-v53.html || { echo "ERROR: app-v53.html missing"; exit 1; }
+          test -f pdf-tools.js || { echo "ERROR: pdf-tools.js missing"; exit 1; }
+
+          # Package files directly at root of zip (required by Portal assembly)
+          zip -9 pdf-optimizer.zip index.html app-v53.html pdf-tools.js
+
+          # List zip contents for verification
+          unzip -l pdf-optimizer.zip
+
+      - name: Publish GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.vars.outputs.tag }}
+        run: |
+          gh release create "$TAG" pdf-optimizer.zip \
+            --title "PDF Optimizer Studio $TAG" \
+            --notes "Automated distribution artifact release for TDTU TKNT Portal integration." \
+            --generate-notes || \
+          gh release upload "$TAG" pdf-optimizer.zip --clobber
