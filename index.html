@@ -48,8 +48,8 @@
                 // Ví dụ: frame.src = 'app-v53.html?v=5.8.0' → base = current page URL
                 // → pdf-tools.js sẽ resolve đúng tại cùng thư mục với index.html.
                 const pageBase = new URL('.', document.baseURI).href;
-                script.src = pageBase + 'pdf-tools.js?v=5.8.0';
-                script.dataset.pdfTools = 'v5.8.0';
+                script.src = pageBase + 'pdf-tools.js?v=1.0.5';
+                script.dataset.pdfTools = 'v1.0.5';
                 script.onload = () => loading?.remove();
                 script.onerror = () => showStartupError('Không tải được bộ công cụ V5.8. Vui lòng thử tải lại.');
                 doc.body.appendChild(script);
@@ -61,7 +61,7 @@
 
         // Gắn sự kiện trước rồi mới nạp iframe để không bỏ lỡ sự kiện load khi trình duyệt dùng cache.
         frame.addEventListener('load', startApp);
-        frame.src = 'app-v53.html?v=5.8.0';
+        frame.src = 'app-v53.html?v=1.0.5';
 
         // Không để màn hình xoay vô hạn nếu mạng hoặc bộ nhớ đệm gặp sự cố.
         setTimeout(() => {
