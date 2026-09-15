@@ -1,4 +1,4 @@
-﻿# AI Handover & Integration Guide
+# AI Handover & Integration Guide
 
 ## 1. Repository Governance
 
@@ -12,7 +12,7 @@
 ## 2. Central Portal Integration
 
 - **Central Portal Repository:** [`tranquanghai-ops/TDTU-TKNT-Portal`](https://github.com/tranquanghai-ops/TDTU-TKNT-Portal)
-- **Target Portal URL:** `https://tdtu-tknt.web.app/pdf-optimizer/`
+- **Target Portal URL:** `https://tknt-tdtu.web.app/pdf-optimizer/`
 - **Intended Mount Path:** `/pdf-optimizer/`
 - **Artifact Name:** `pdf-optimizer.zip`
 - **Required Index File:** `index.html`
@@ -27,7 +27,14 @@
 
 ## 4. Release & Packaging Workflow
 
-- When a new version tag (e.g., `v1.0.0`) is pushed to this repository:
+- When a new version tag (e.g., `v1.0.0`, `v1.0.1`) is pushed to this repository:
   1. The GitHub Actions release workflow packages `index.html`, `app-v53.html`, and `pdf-tools.js` into `pdf-optimizer.zip`.
   2. A GitHub Release is created containing `pdf-optimizer.zip`.
   3. The portal registry (`apps-registry.json` in `TDTU-TKNT-Portal`) can then be updated to point to the new tag and enabled.
+
+## 5. Firebase Hosting cleanUrls & trailingSlash Runtime Quirk (Resolved in v1.0.1)
+
+- **Issue:** Firebase Hosting default settings (`cleanUrls: true`, `trailingSlash: true`) cause any request to `app-v53.html` to receive a `301 Moved Permanently` redirect to `app-v53/`.
+- **Symptom:** The iframe's base URI becomes `/pdf-optimizer/app-v53/`. Any relative script tag injected into the iframe document (e.g., `<script src="pdf-tools.js">`) resolves to `/pdf-optimizer/app-v53/pdf-tools.js` which returns HTTP 404, triggering:
+  `"Không thể khởi động ứng dụng. Không tải được bộ công cụ V5.8. Vui lòng thử tải lại."`
+- **Resolution (v1.0.1):** In `index.html`, dynamically compute the absolute URL for `pdf-tools.js` using the parent window's `document.baseURI` (`new URL('.', document.baseURI).href + 'pdf-tools.js?v=5.8.0'`) prior to appending the `<script>` element to the iframe body.
