@@ -107,10 +107,6 @@
                     <span><strong class="text-slate-700">Trần Quang Hải</strong> - email:
                         <a href="mailto:tranquanghai@tdtu.edu.vn" class="font-medium text-blue-600 hover:text-blue-700 hover:underline">tranquanghai@tdtu.edu.vn</a>
                     </span>
-                    <span class="hidden sm:inline text-slate-300">•</span>
-                    <span><strong class="text-slate-700">Trương Thị Thúy Diễm</strong> - email:
-                        <a href="mailto:truongthithuydiem@tdtu.edu.vn" class="font-medium text-blue-600 hover:text-blue-700 hover:underline">truongthithuydiem@tdtu.edu.vn</a>
-                    </span>
                 </div>
                 <div class="mt-1 text-[11px] text-slate-500">
                     Code developed with: <strong class="text-slate-700">OpenAI Codex</strong>
