@@ -278,8 +278,13 @@
                 </button>
                 <div class="w-px h-5 bg-slate-700 mx-1 hidden sm:block"></div>
                 <button onclick="toggleProcessAll()" id="process-all-btn" class="bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-lg transition-all flex items-center gap-2">
-                    <i class="fa-solid fa-bolt"></i> Tối ưu & Resize Tất Cả
+                    <i class="fa-solid fa-bolt"></i> Tối ưu &amp; Resize Tất Cả
                 </button>
+                <div class="w-px h-5 bg-slate-700 mx-1 hidden sm:block"></div>
+                <label class="flex items-center gap-2 cursor-pointer select-none" title="File tải xuống sẽ giữ nguyên tên file gốc.">
+                    <input type="checkbox" id="keep-original-filename-chk" class="rounded text-emerald-500 focus:ring-emerald-400 w-3.5 h-3.5" onchange="keepOriginalFilename = this.checked">
+                    <span class="text-xs text-slate-300 font-medium">Giữ nguyên tên file</span>
+                </label>
                 <button onclick="downloadAllZip()" id="download-all-btn" disabled class="bg-slate-800 hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed text-slate-300 font-semibold text-xs px-4 py-2.5 rounded-xl border border-slate-700 transition-colors flex items-center gap-2">
                     <i class="fa-solid fa-file-zipper"></i> Tải .ZIP
                 </button>
@@ -479,6 +484,7 @@
         let previewZoom = 1.0;
         let isBatchProcessing = false;
         let batchStopRequested = false;
+        let keepOriginalFilename = false;
         const activeOptimizationTasks = new Map();
 
         function createCancellationError() {
@@ -2469,8 +2475,12 @@
             const url = URL.createObjectURL(selectedVersion.blob);
             const a = document.createElement('a');
             a.href = url;
-            const versionSuffix = (item.versions?.length || 0) > 1 ? `_optimized_V${selectedVersion.number}.pdf` : '_optimized.pdf';
-            a.download = item.name.replace(/\.pdf$/i, versionSuffix);
+            if (keepOriginalFilename) {
+                a.download = item.name;
+            } else {
+                const versionSuffix = (item.versions?.length || 0) > 1 ? `_optimized_V${selectedVersion.number}.pdf` : '_optimized.pdf';
+                a.download = item.name.replace(/\.pdf$/i, versionSuffix);
+            }
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -2480,12 +2490,26 @@
         async function downloadAllZip() {
             const zip = new JSZip();
             let count = 0;
+            const zipNameCount = new Map();
 
             for (const item of filesQueue) {
                 const selectedVersion = getSelectedVersion(item);
                 if (selectedVersion) {
-                    const versionSuffix = (item.versions?.length || 0) > 1 ? `_optimized_V${selectedVersion.number}.pdf` : '_optimized.pdf';
-                    const name = item.name.replace(/\.pdf$/i, versionSuffix);
+                    let name;
+                    if (keepOriginalFilename) {
+                        name = item.name;
+                    } else {
+                        const versionSuffix = (item.versions?.length || 0) > 1 ? `_optimized_V${selectedVersion.number}.pdf` : '_optimized.pdf';
+                        name = item.name.replace(/\.pdf$/i, versionSuffix);
+                    }
+                    // Deduplicate ZIP entries: if name already used, append _2, _3, …
+                    if (zipNameCount.has(name)) {
+                        const n = zipNameCount.get(name) + 1;
+                        zipNameCount.set(name, n);
+                        name = name.replace(/\.pdf$/i, `_${n}.pdf`);
+                    } else {
+                        zipNameCount.set(name, 1);
+                    }
                     zip.file(name, await selectedVersion.blob.arrayBuffer());
                     count++;
                 }
