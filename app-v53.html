@@ -273,6 +273,11 @@
             </div>
 
             <div class="flex flex-wrap items-center gap-3">
+                <label class="flex items-center gap-2 cursor-pointer select-none px-2.5 py-1.5 rounded-xl hover:bg-slate-800/80 transition-colors border border-slate-700/60 bg-slate-800/40" title="Không thêm _optimized vào tên file tải xuống">
+                    <input type="checkbox" id="keep-original-filename-chk" class="rounded text-emerald-500 focus:ring-emerald-400 w-4 h-4 accent-emerald-500 cursor-pointer" onchange="keepOriginalFilename = this.checked">
+                    <span class="text-xs text-slate-200 font-semibold whitespace-nowrap">Giữ nguyên tên file</span>
+                </label>
+                <div class="w-px h-5 bg-slate-700 mx-1 hidden sm:block"></div>
                 <button onclick="openMergeModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-lg transition-all flex items-center gap-2">
                     <i class="fa-solid fa-layer-group"></i> Gộp File (Combine)
                 </button>
@@ -281,10 +286,6 @@
                     <i class="fa-solid fa-bolt"></i> Tối ưu &amp; Resize Tất Cả
                 </button>
                 <div class="w-px h-5 bg-slate-700 mx-1 hidden sm:block"></div>
-                <label class="flex items-center gap-2 cursor-pointer select-none" title="File tải xuống sẽ giữ nguyên tên file gốc.">
-                    <input type="checkbox" id="keep-original-filename-chk" class="rounded text-emerald-500 focus:ring-emerald-400 w-3.5 h-3.5" onchange="keepOriginalFilename = this.checked">
-                    <span class="text-xs text-slate-300 font-medium">Giữ nguyên tên file</span>
-                </label>
                 <button onclick="downloadAllZip()" id="download-all-btn" disabled class="bg-slate-800 hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed text-slate-300 font-semibold text-xs px-4 py-2.5 rounded-xl border border-slate-700 transition-colors flex items-center gap-2">
                     <i class="fa-solid fa-file-zipper"></i> Tải .ZIP
                 </button>
