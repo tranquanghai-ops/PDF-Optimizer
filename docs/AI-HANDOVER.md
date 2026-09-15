@@ -38,3 +38,4 @@
 - **Symptom:** The iframe's base URI becomes `/pdf-optimizer/app-v53/`. Any relative script tag injected into the iframe document (e.g., `<script src="pdf-tools.js">`) resolves to `/pdf-optimizer/app-v53/pdf-tools.js` which returns HTTP 404, triggering:
   `"Không thể khởi động ứng dụng. Không tải được bộ công cụ V5.8. Vui lòng thử tải lại."`
 - **Resolution (v1.0.1):** In `index.html`, dynamically compute the absolute URL for `pdf-tools.js` using the parent window's `document.baseURI` (`new URL('.', document.baseURI).href + 'pdf-tools.js?v=5.8.0'`) prior to appending the `<script>` element to the iframe body.
+- **Production Verification Status:** v1.0.1 deployed to Firebase Hosting (project: `tknt-tdtu`) and verified via Chrome Headless CDP on 2026-09-15. Application bootstrap, iframe integration, dynamic script injection, and UI controls all verified working without runtime errors.
