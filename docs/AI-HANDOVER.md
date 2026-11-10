@@ -1,5 +1,15 @@
 # AI Handover & Integration Guide
 
+## Current standalone deployment (2026-11-10)
+
+- Production: https://ifa-pdf.web.app
+- Firebase project and Hosting site: `ifa-pdf`.
+- Build with `npm run build`; deploy with `npm run deploy`.
+- Deployment packages only the three web assets into `dist/` and does not depend on the portal.
+- Visible author: Trần Quang Hải. Removed the second author and AI coding credit from the runtime UI.
+- The original source repository remains unchanged. Existing filename and loader improvements are retained.
+- Portal information below is historical documentation, not the current deployment target.
+
 ## 1. Repository Governance
 
 - **Original Archive Repository:** [`tranquanghai-ops/PDF-Optimizer-Resizer-Studio`](https://github.com/tranquanghai-ops/PDF-Optimizer-Resizer-Studio)

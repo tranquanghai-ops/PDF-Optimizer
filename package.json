@@ -1,0 +1,11 @@
+{
+  "name": "ifa-pdf-optimizer",
+  "version": "1.0.6",
+  "private": true,
+  "description": "Standalone PDF Optimizer & Resizer Studio by Trần Quang Hải",
+  "scripts": {
+    "build": "node scripts/build.cjs",
+    "start": "npx -y firebase-tools@latest emulators:start --only hosting --project ifa-pdf",
+    "deploy": "npx -y firebase-tools@latest deploy --only hosting --project ifa-pdf"
+  }
+}
